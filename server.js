@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express")
 const BlockedRequest = require("./src/models/BlockedRequest")
-const {basicRateLimiter,loginRateLimiter,realLoginRateLimiter,redis} = require("./src/middlewares/rateLimiter")
+const {loginRateLimiter,realLoginRateLimiter,redis} = require("./src/middlewares/fixedWindowRateLimiter")
+const basicRateLimiter = require("./src/middlewares/basicExpressRateLimit")
 const app = express()
 // const redis = ('./src/config/redis')
 const mongoose = require("mongoose");
@@ -29,7 +30,7 @@ app.get("/api/test", (req, res) => {
 
 
 
-            //Fixed window rate limiting start
+            /* ----------------------------Fixed window rate limiting start--------------------------------  */
 
   //basic rate limiting requst
 app.post("/login", loginRateLimiter, (req, res) => {
@@ -87,7 +88,7 @@ app.post("/real-login",realLoginRateLimiter,async (req,res)=>{
       res.json({ message: "Login successful!" });
 })
 
-          //Fixed window rate limiting end
+          /* ----------------------------------- END -------------------------------------------------------- */
 
 
 
