@@ -3,6 +3,8 @@ const express = require("express")
 const BlockedRequest = require("./src/models/BlockedRequest")
 const {loginRateLimiter,realLoginRateLimiter,redis} = require("./src/middlewares/fixedWindowRateLimiter")
 const basicRateLimiter = require("./src/middlewares/basicExpressRateLimit")
+const slidingWindowRateLimiter = require("./src/middlewares/slidingWindowLimiter")
+
 const app = express()
 // const redis = ('./src/config/redis')
 const mongoose = require("mongoose");
@@ -91,7 +93,15 @@ app.post("/real-login",realLoginRateLimiter,async (req,res)=>{
           /* ----------------------------------- END -------------------------------------------------------- */
 
 
+            /* ----------------------------Sliding window log rate limiting start--------------------------------  */
 
+ 
+  app.get("/slidingWindow-api",slidingWindowRateLimiter,(req,res)=>{
+  res.json({message:"Request successfull"})
+ })         
+
+
+          /* ----------------------------------- END -------------------------------------------------------- */
 
 
 app.listen(PORT, ()=> console.log(`Server running on ${PORT}`))
